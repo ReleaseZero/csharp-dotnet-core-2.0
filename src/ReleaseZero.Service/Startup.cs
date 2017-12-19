@@ -10,27 +10,56 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using Microsoft.AspNetCore;
 using WebMarkupMin.AspNetCore2;
+using Serilog;
+using Serilog.Formatting.Compact;
+using System.IO;
 
 namespace ReleaseZero.Service
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public static int Main(string[] args)
         {
-            Configuration = configuration;
-        }
 
-        public static void Main(string[] args)
-        {
-            BuildWebHost(args).Run();
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(Configuration)
+                .Enrich.FromLogContext()
+                .Enrich.WithMachineName()
+                .Enrich.WithProcessId()
+                .Enrich.WithThreadId()
+                .WriteTo.Console(new RenderedCompactJsonFormatter())
+                .CreateLogger();
+
+            try
+            {
+                Log.Information("Starting ReleaseZero.Service...");
+
+                BuildWebHost(args).Run();
+
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Host terminated unexpectedly");
+                return 1;
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
+                .UseSerilog()
                 .Build();
 
-        public IConfiguration Configuration { get; }
+        public static IConfiguration Configuration { get; } = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
+            .Build();
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ReleaseZero.Service.Models;
+using Serilog;
 
 namespace ReleaseZero.Service.Controllers
 {
@@ -17,6 +18,7 @@ namespace ReleaseZero.Service.Controllers
         [ResponseCache(Duration = 3600)]
         public IActionResult Index()
         {
+            Log.Debug("Request to Index action in HomeController");
             // The view being returned is calculated based on the name of the
             // controller (Home) and the name of the action method (Index).
             // So in this case, the view returned is /Views/Home/Index.cshtml.
