@@ -13,9 +13,14 @@ namespace ReleaseZero.Service.Areas.UI.Controllers
     /// A controller intercepts the incoming browser request and returns
     /// an HTML view (.cshtml file) or any other type of data.
     /// </summary>
+    [ApiExplorerSettings(IgnoreApi = true)]
     [Area("UI")]
     public class HomeController : Controller
     {
+        /// <summary>
+        /// Index action in Home controller
+        /// </summary>
+        /// <returns></returns>
         [ResponseCache(Duration = 3600)]
         [Route("/")]
         [Route("/Home")]
@@ -29,6 +34,10 @@ namespace ReleaseZero.Service.Areas.UI.Controllers
             return View();
         }
 
+        /// <summary>
+        /// About action in Home controller
+        /// </summary>
+        /// <returns></returns>
         [ResponseCache(Duration = 3600)]
         [Route("/Home/About")]
         public IActionResult About()
