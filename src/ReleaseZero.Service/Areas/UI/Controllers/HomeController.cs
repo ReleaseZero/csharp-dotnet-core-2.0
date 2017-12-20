@@ -4,18 +4,22 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using ReleaseZero.Service.Models;
+using ReleaseZero.Service.Areas.UI.Models;
 using Serilog;
 
-namespace ReleaseZero.Service.Controllers
+namespace ReleaseZero.Service.Areas.UI.Controllers
 {
     /// <summary>
     /// A controller intercepts the incoming browser request and returns
     /// an HTML view (.cshtml file) or any other type of data.
     /// </summary>
+    [Area("UI")]
     public class HomeController : Controller
     {
         [ResponseCache(Duration = 3600)]
+        [Route("/")]
+        [Route("/Home")]
+        [Route("/Home/Index")]
         public IActionResult Index()
         {
             Log.Debug("Request to Index action in HomeController");
@@ -26,6 +30,7 @@ namespace ReleaseZero.Service.Controllers
         }
 
         [ResponseCache(Duration = 3600)]
+        [Route("/Home/About")]
         public IActionResult About()
         {
             // Creates a model and passes it on to the view.

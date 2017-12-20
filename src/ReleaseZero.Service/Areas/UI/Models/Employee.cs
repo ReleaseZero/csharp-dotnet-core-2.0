@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ReleaseZero.Service.Models
+namespace ReleaseZero.Service.Areas.UI.Models
 {
     public class Employee
     {
